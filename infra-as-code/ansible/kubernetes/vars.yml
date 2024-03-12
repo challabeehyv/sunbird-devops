@@ -1,0 +1,8 @@
+---
+
+disable_firewall: yes
+kubernetes_subnet: 192.168.56.0/24 #change this according to the Virtual Machine IP
+
+setup_vip: yes
+install_nginx_ingress: yes
+install_longhorn: yes
