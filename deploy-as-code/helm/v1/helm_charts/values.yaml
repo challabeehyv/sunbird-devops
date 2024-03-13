@@ -1,5 +1,5 @@
 global:
-  host: "loadtesting.xix.in"
+  host: "192.168.56.14"
   database:
     host: "192.168.56.13"
     user: "postgres"
