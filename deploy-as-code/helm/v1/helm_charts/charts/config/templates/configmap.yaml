@@ -38,4 +38,11 @@ data:
   webhook_url: {{.Values.global.registry.webhook_url | quote}}
   manager_type: {{.Values.global.registry.manager_type | quote}}
   sunbirdrc_url: http://{{ .Release.Name }}-registry:8081
+  opa_allow_key_name: {{.Values.global.registry.opa_allow_key_name | quote}}
+  opa_enabled: {{.Values.global.registry.opa_enabled | quote}}
+  swagger_enabled: {{.Values.global.registry.swagger_enabled| quote}}
+  swagger_title: {{.Values.global.registry.swagger_title| quote}}
+  claims_enabled: {{.Values.global.registry.claims_enabled | quote}}
+  certificate_enabled: {{.Values.global.registry.certificate_enabled | quote}}
+  encryption_enabled: {{.Values.global.registry.encryption_enabled | quote}}
 
