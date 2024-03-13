@@ -5,12 +5,10 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   DB_ADDR: {{.Values.global.database.host | quote}}
-  DB_DATABASE: {{.Values.global.keycloak.database | quote}}
+  DB_DATABASE: {{.Values.global.registry.database | quote}}
   DB_PORT: {{.Values.global.database.port | quote}}
   DB_USER: {{.Values.global.database.user | quote}}
   DB_VENDOR: {{.Values.global.database.vendor | quote}}
-  KEYCLOAK_USER: {{.Values.global.keycloak.admin.username | quote}}
-  PROXY_ADDRESS_FORWARDING: {{.Values.global.keycloak.proxy_forwarding | quote}}
   connectionInfo_uri: jdbc:postgresql://{{.Values.global.database.host}}:{{.Values.global.database.port}}/{{.Values.global.registry.database}}
   connectionInfo_username: {{.Values.global.database.user | quote}}
   elastic_search_connection_url: {{.Values.global.elastic_search.url | quote}}
@@ -30,9 +28,6 @@ data:
   certificate_health_check_url: http://{{ .Release.Name }}-certificate-api:8078/health
   template_base_url: http://{{ .Release.Name }}-registry:8081/api/v1/templates/ #Looks for certificate templates for pdf copy of the signed certificate
   sunbird_keycloak_user_set_password: {{.Values.global.registry.keycloak_user_set_password | quote}}
-  filestorage_connection_url: {{.Values.global.minio.url | quote}}
-  filestorage_access_key: {{.Values.global.minio.access_key | quote}}
-  filestorage_bucket_key: {{.Values.global.minio.bucket_key | quote}}
   registry_base_apis_enable: {{.Values.global.registry.base_apis_enabled | quote}}
   logging.level.root: {{.Values.global.registry.log_level | quote}}
   enable_external_templates: {{.Values.global.registry.enable_external_templates | quote}}
@@ -41,8 +36,6 @@ data:
   kafka_bootstrap_address: {{.Values.global.kafka.url | quote}}
   webhook_enabled: {{.Values.global.registry.enable_webhook | quote}}
   webhook_url: {{.Values.global.registry.webhook_url | quote}}
-  redis_host: {{.Values.global.redis.host | quote}}
-  redis_port: {{.Values.global.redis.port | quote}}
   manager_type: {{.Values.global.registry.manager_type | quote}}
   sunbirdrc_url: http://{{ .Release.Name }}-registry:8081
 
