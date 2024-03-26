@@ -42,13 +42,8 @@ kubectl create ns demo-registry
 Convert all the passwords/secrets into base64 format and update these values in `values.yaml` file
 **Secrets**
 - DB_PASSWORD: Postgres database password
-- KEYCLOAK_ADMIN_PASSWORD: Keycloak admin password used to login to admin console
-- KEYCLOAK_DEFAULT_USER_PASSWORD: Default password to be set for new users created by registry
-- MINIO_SECRET_KEY: Minio secret key 
-- ELASTIC_SEARCH_PASSWORD: Elastic search connection password
-- KEYCLOAK_ADMIN_CLIENT_SECRET: Client secret of keycloak admin client for registry
 
-`DB_PASSWORD, KEYCLOAK_ADMIN_PASSWORD and KEYCLOAK_DEFAULT_USER_PASSWORD are mandotry secrets to be set. Other secrets can be set to empty `
+`DB_PASSWORD is mandotry secret to be set. Other secrets can be set to empty `
 
 ### Modify configuration values
 Configuration values like database address, elastic search address etc should be modified in values.yaml file.
@@ -57,17 +52,6 @@ Configuration values like database address, elastic search address etc should be
 ### Schemas
 All schema files should be placed in the schemas directory located at `sunbird-rc-core/infra/helm_charts/charts/registry/schemas`.
 
-### Configure signing keys
-The signing keys should be placed in the below directories
-
-Both public and private keys for signing
-
-`sunbird-rc-core/infra/helm_charts/charts/certificate-signer/keys`
-
-Only public key for exposing to verifiers
-
-`sunbird-rc-core/infra/helm_charts/charts/public-key-service/keys`
-# Please note that by default a sample key is added. It is highly recommended to update this key before going to production.
 
 ### Deploy helm charts
 ```bash
@@ -88,42 +72,6 @@ REVISION: 1
 kubectl get pods -n demo-registry
 ```
 
-### Import keycloak realm
-
-- Goto keycloak admin console `<host>/auth/`
-- Login with username `admin` and use the same password configured in secrets
-- Click on `Master` and select `Add realm`
-- Select `https://github.com/Sunbird-RC/sunbird-rc-core/blob/main/imports/realm-export.json` file 
-- And click on `Create`
-
-
-### Configure keycloak secret
-
-**Get keycloak secret from keycloak admin console**
-- Goto keycloak admin console `<host>/auth/`
-- Login with username `admin` and use the same password configured in secrets
-- Goto `clients` page and click on `admin-api`
-- Goto `Credentials` tab and click on `Regenerate Secret`
-- Copy the secret
-
-**Configure secret in registry**
-- Get all secrets created
-```bash
-kubectl get secret -n demo-registry
-```
-- Encode the secret in base64 format
-```bash
-echo -n "secret copied from keycloak" | base64
-```
-- Open the secret in edit mode
-```bash
-kubectl edit secret rc-secret -n demo-registry
-```
-Replace empty string for `KEYCLOAK_ADMIN_CLIENT_SECRET` with the base64 encoded secret
-- Restart registry
-```bash
-kubectl rollout restart deploy/demo-registry -n demo-registry
-```
 - Check the pods status
 ```bash
 kubectl get pods -n demo-registry
