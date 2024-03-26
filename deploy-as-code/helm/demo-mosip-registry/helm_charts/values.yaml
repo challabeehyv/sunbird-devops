@@ -7,7 +7,7 @@ global:
     vendor: "postgres"
   registry:
     database: "registry"
-    search_provider: "dev.sunbirdrc.registry.service.ElasticSearchService"
+    search_provider: "dev.sunbirdrc.registry.service.NativeSearchService"
     sso:
       realm: "sunbird-rc"
       admin_client_id: "admin-api"
@@ -18,15 +18,15 @@ global:
     log_level: INFO
     enable_external_templates: true
     enable_async: false
-    enable_authentication: true
+    enable_authentication: false
     enable_webhook: false
     webhook_url: http://localhost:5001/api/v1/callback
     manager_type: DefinitionsManager
     swagger_enabled: true
     swagger_title: SUNBIRD-RC
     authentication_enabled: true
-    claims_enabled: true
-    certificate_enabled: true
+    claims_enabled: false
+    certificate_enabled: false
     encryption_enabled: false
     opa_enabled: false
     opa_allow_key_name: authorized
@@ -38,5 +38,3 @@ global:
     url: 192.168.56.17
   secrets:
     DB_PASSWORD: cG9zdGdyZXMtcGFzcw==
-    ELASTIC_SEARCH_PASSWORD: ""
-    MINIO_SECRET_KEY: Kgo=

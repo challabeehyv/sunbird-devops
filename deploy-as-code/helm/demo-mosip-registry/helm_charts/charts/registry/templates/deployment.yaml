@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "keycloak-service.fullname" . }}
+  name: {{ include "registry.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "keycloak-service.labels" . | nindent 4 }}
+    {{- include "registry.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "keycloak-service.selectorLabels" . | nindent 6 }}
+      {{- include "registry.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,13 +19,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "keycloak-service.selectorLabels" . | nindent 8 }}
+        {{- include "registry.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "keycloak-service.serviceAccountName" . }}
+      serviceAccountName: {{ include "registry.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -38,25 +38,20 @@ spec:
             - configMapRef:
                 name: "{{ .Release.Name }}-config"
           env:
-            - name: DB_PASSWORD
+            - name: connectionInfo_password
               valueFrom:
                 secretKeyRef:
                   name: rc-secret
                   key: DB_PASSWORD
-            - name: KEYCLOAK_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: rc-secret
-                  key: KEYCLOAK_ADMIN_PASSWORD
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           readinessProbe:
             httpGet:
-              path: /auth/
+              path: /api/docs/swagger.json
               port: {{ .Values.service.port }}
-            failureThreshold: 10
+            failureThreshold: 20
             periodSeconds: 30
             timeoutSeconds: 10
             initialDelaySeconds: 30
@@ -65,9 +60,12 @@ spec:
               port: {{ .Values.service.port }}
             initialDelaySeconds: 15
             periodSeconds: 30
-            failureThreshold: 10
+            failureThreshold: 20
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: {{ .Chart.Name }}-schemas
+              mountPath: /home/sunbirdrc/config/public/_schemas
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -80,3 +78,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+        - name: {{ .Chart.Name }}-schemas
+          configMap:
+            name: {{ .Chart.Name }}-schemas

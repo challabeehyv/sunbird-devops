@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "context-proxy-service.name" -}}
+{{- define "registry.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "context-proxy-service.fullname" -}}
+{{- define "registry.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "context-proxy-service.chart" -}}
+{{- define "registry.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "context-proxy-service.labels" -}}
-helm.sh/chart: {{ include "context-proxy-service.chart" . }}
-{{ include "context-proxy-service.selectorLabels" . }}
+{{- define "registry.labels" -}}
+helm.sh/chart: {{ include "registry.chart" . }}
+{{ include "registry.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "context-proxy-service.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "context-proxy-service.name" . }}
+{{- define "registry.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "registry.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "context-proxy-service.serviceAccountName" -}}
+{{- define "registry.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "context-proxy-service.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "registry.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
